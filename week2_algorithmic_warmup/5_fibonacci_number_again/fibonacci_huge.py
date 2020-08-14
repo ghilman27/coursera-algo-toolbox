@@ -1,19 +1,23 @@
 # Uses python3
-import sys
 
-def get_fibonacci_huge_naive(n, m):
-    if n <= 1:
-        return n
+def get_pisano_sequence_and_period(m):
+    if m < 2:
+        print("WRONG INPUT")
 
-    previous = 0
-    current  = 1
+    period = 0
+    sequence = [0, 1]
+    while True:
+        sequence.append( sum(sequence[-2:]) % m )
+        period += 1
+        if sequence[-2:] == [0, 1]:
+            return sequence[:-2], period
 
-    for _ in range(n - 1):
-        previous, current = current, previous + current
 
-    return current % m
+def get_fibonacci_huge(n, m):
+    sequence, period = get_pisano_sequence_and_period(m)
+    return sequence[n % period]
+
 
 if __name__ == '__main__':
-    input = sys.stdin.read();
-    n, m = map(int, input.split())
-    print(get_fibonacci_huge_naive(n, m))
+    n, m = map(int, input().split())
+    print(get_fibonacci_huge(n, m))
