@@ -1,5 +1,4 @@
 # Uses python3
-import sys
 
 def gcd_naive(a, b):
     current_gcd = 1
@@ -10,7 +9,17 @@ def gcd_naive(a, b):
 
     return current_gcd
 
+
+def gcd(a, b):
+    if a == 0:
+        return b
+    elif b == 0:
+        return a
+    
+    remainder = max(a,b) % min(a,b)
+    return gcd(min(a,b), remainder)
+
+
 if __name__ == "__main__":
-    input = sys.stdin.read()
-    a, b = map(int, input.split())
-    print(gcd_naive(a, b))
+    a, b = map(int, input().split())
+    print(gcd(a, b))
