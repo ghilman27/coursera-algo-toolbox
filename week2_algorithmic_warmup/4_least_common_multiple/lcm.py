@@ -1,15 +1,27 @@
 # Uses python3
-import sys
 
-def lcm_naive(a, b):
-    for l in range(1, a*b + 1):
-        if l % a == 0 and l % b == 0:
-            return l
+def calc_gcd(a, b):
+    if a == 0:
+        return b
+    elif b == 0:
+        return a
+    
+    remainder = max(a,b) % min(a,b)
+    return calc_gcd(min(a,b), remainder)
 
-    return a*b
+
+def lcm(a, b):
+    if a == 0 or b == 0:
+        return 0
+
+    gcd = calc_gcd(a, b)
+    if gcd == 1:
+        return a*b
+    else:
+        return int(min(a,b) / gcd) * max(a,b)
+
 
 if __name__ == '__main__':
-    input = sys.stdin.read()
-    a, b = map(int, input.split())
-    print(lcm_naive(a, b))
+    a, b = map(int, input().split())
+    print(lcm(a, b))
 
