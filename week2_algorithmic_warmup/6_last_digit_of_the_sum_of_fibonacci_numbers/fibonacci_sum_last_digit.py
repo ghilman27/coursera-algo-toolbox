@@ -1,21 +1,45 @@
 # Uses python3
-import sys
 
-def fibonacci_sum_naive(n):
-    if n <= 1:
-        return n
+START_PATTERN = [0, 1]
+BASIS_MODULO = 10
 
-    previous = 0
-    current  = 1
-    sum      = 1
+def get_pisano_sequence_and_period(m):
+    if m < 2:
+        print("WRONG INPUT")
 
-    for _ in range(n - 1):
-        previous, current = current, previous + current
-        sum += current
+    period = 0
+    sequence = [0, 1]
+    while True:
+        sequence.append( sum(sequence[-2:]) % m )
+        period += 1
+        if sequence[-2:] == START_PATTERN:
+            return sequence[:-2], period
 
-    return sum % 10
+
+def get_cumsum_pisano_sequence_and_period(m):
+    if m < 2:
+        print("WRONG INPUT")
+
+    PISANO_SEQUENCE, _ = get_pisano_sequence_and_period(m)
+    sequence = [0, 1]
+    period = 0
+    cumsum = 1
+    idx = 1
+
+    while True:
+        idx = (idx + 1) % len(PISANO_SEQUENCE)
+        period += 1
+        cumsum = (cumsum + PISANO_SEQUENCE[idx]) % m
+        sequence.append( cumsum )
+        if sequence[-2:] == START_PATTERN:
+            return sequence[:-2], period
+
+
+def fibonacci_sum_last_digit(n):
+    sequence, period = get_cumsum_pisano_sequence_and_period(BASIS_MODULO)
+    return sequence[n % period]
+
 
 if __name__ == '__main__':
-    input = sys.stdin.read()
-    n = int(input)
-    print(fibonacci_sum_naive(n))
+    n = int(input())
+    print(fibonacci_sum_last_digit(n))
