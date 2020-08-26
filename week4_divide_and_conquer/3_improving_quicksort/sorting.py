@@ -14,6 +14,11 @@ def partition3(array, left, right):
     final_pivot_idx = left
 
     for crnt_idx in range(left + 1, right + 1):
+        # -KEY POINT-
+        # double subtitution because when left partition added, 
+        # first index of middle partition will be shifted
+        # [l l m m m v * *]
+        # [l l v m m m * *]
         if array[crnt_idx] < pivot_value:
             left_part_idx += 1
             final_pivot_idx += 1
@@ -37,11 +42,17 @@ def randomized_quick_sort(array, left, right):
 
     rand_pivot_idx = random.randint(left, right)
     array[left], array[rand_pivot_idx] = array[rand_pivot_idx], array[left]
-    #use partition3
     left_part_idx, final_pivot_idx = partition3(array, left, right)
+
+    # -KEY POINT-
     if left_part_idx is not None:
+        # if middle partition exist (there are multiple occurence of pivot number)
+        # then exclude the middle partition (because they all are the same)
+        # no need to be sorted
         randomized_quick_sort(array, left, left_part_idx)
     else:
+        # else exclude the pivot value
+        # because it is already in its final place
         randomized_quick_sort(array, left, final_pivot_idx - 1)
     randomized_quick_sort(array, final_pivot_idx + 1, right)
 
