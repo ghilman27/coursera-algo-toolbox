@@ -1,34 +1,53 @@
 # Uses python3
 import sys
 import random
+# from test import test, randomized_quick_sort2
 
-def partition3(a, l, r):
+MAX_VALUE = 10000
+sys.setrecursionlimit(MAX_VALUE)
+
+
+def partition3(array, left, right):
     #write your code here
-    pass
+    pivot_value = array[left]
+    left_part_idx = left
+    final_pivot_idx = left
 
-def partition2(a, l, r):
-    x = a[l]
-    j = l
-    for i in range(l + 1, r + 1):
-        if a[i] <= x:
-            j += 1
-            a[i], a[j] = a[j], a[i]
-    a[l], a[j] = a[j], a[l]
-    return j
+    for crnt_idx in range(left + 1, right + 1):
+        if array[crnt_idx] < pivot_value:
+            left_part_idx += 1
+            final_pivot_idx += 1
+            array[crnt_idx], array[left_part_idx] = array[left_part_idx], array[crnt_idx]
+            if final_pivot_idx != left_part_idx:
+                array[crnt_idx], array[final_pivot_idx] = array[final_pivot_idx], array[crnt_idx]
+                
+        elif array[crnt_idx] == pivot_value:
+            final_pivot_idx += 1
+            array[crnt_idx], array[final_pivot_idx] = array[final_pivot_idx], array[crnt_idx]
+    
+    array[left], array[final_pivot_idx] = array[final_pivot_idx], pivot_value
+    if final_pivot_idx != left_part_idx:
+        return left_part_idx, final_pivot_idx
+    return None, final_pivot_idx
 
 
-def randomized_quick_sort(a, l, r):
-    if l >= r:
+def randomized_quick_sort(array, left, right):
+    if left >= right:
         return
-    k = random.randint(l, r)
-    a[l], a[k] = a[k], a[l]
+
+    rand_pivot_idx = random.randint(left, right)
+    array[left], array[rand_pivot_idx] = array[rand_pivot_idx], array[left]
     #use partition3
-    m = partition2(a, l, r)
-    randomized_quick_sort(a, l, m - 1);
-    randomized_quick_sort(a, m + 1, r);
+    left_part_idx, final_pivot_idx = partition3(array, left, right)
+    if left_part_idx is not None:
+        randomized_quick_sort(array, left, left_part_idx)
+    else:
+        randomized_quick_sort(array, left, final_pivot_idx - 1)
+    randomized_quick_sort(array, final_pivot_idx + 1, right)
 
 
 if __name__ == '__main__':
+    # test(randomized_quick_sort, randomized_quick_sort2)
     input = sys.stdin.read()
     n, *a = list(map(int, input.split()))
     randomized_quick_sort(a, 0, n - 1)
